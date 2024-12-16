@@ -1,0 +1,96 @@
+:root {
+    /* --primary-theme: #89D7AE; */
+    --primary-theme: #68c4b9;
+    --primary-theme-dark: #04A7AC;
+    --secondary-theme: #006D7A;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+textarea:focus,
+input:focus {
+    outline: none;
+}
+
+.account-form {
+    width: 500px;
+}
+
+.bg-primary-theme {
+    background-color: var(--primary-theme);
+}
+
+.bg-primary-theme-dark {
+    background-color: var(--primary-theme-dark);
+}
+
+.bg-secondary-theme {
+    background-color: var(--secondary-theme);
+}
+
+.text-primary-theme {
+    color: var(--primary-theme)
+}
+
+.text-secondary-theme {
+    color: var(--secondary-theme)
+}
+
+.bg-account {
+    background-image: url(./account-background.jpg);
+    min-height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+
+a {
+    text-decoration: none;
+}
+
+.nav-link-theme {
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: #000000;
+    text-decoration: none;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+    background-color: transparent;
+    border: 0;
+    border-radius: 15px;
+}
+
+.nav-link-theme.active {
+    color: #ffffff;
+    background-color: var(--primary-theme);
+}
+
+.custom-file-upload {
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px 20px;
+    color: white;
+    background-color: #007bff;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .custom-file-upload:hover {
+    background-color: #0056b3;
+  }
+
+  .custom-file-input {
+    display: none;
+  }
+
+  #fileName {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #6c757d;
+  }
