@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import pyridamLogo from "../assets/pyridam.png";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -14,7 +14,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       const payload = {
@@ -45,7 +45,7 @@ const Login = () => {
       console.error(error);
       Swal.fire({
         title: `Login failed`,
-        text: `${response.data.message}`,
+        text: `${error}`,
         icon: `error`,
       });
     }

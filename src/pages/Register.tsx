@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 // import axios from "axios";
 // import swal from "sweetalert2";
@@ -23,10 +23,10 @@ const Register = () => {
   const [password, setPassword] = useState("");
   // const [selectedFile, setSelectedFile] = useState(null);
   // const [error, setError] = useState("");
-  const [fileNameKTP, setFileNameKTP] = useState("");
-  const [fileNameSelfie, setFileNameSelfie] = useState("");
+  // const [fileNameKTP, setFileNameKTP] = useState("");
+  // const [fileNameSelfie, setFileNameSelfie] = useState("");
 
-  const handleKTPInput = async (e) => {
+  const handleKTPInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (
       /^\d*$/.test(e.target.value) &&
       e.target.value.toString().length <= 16
@@ -35,11 +35,11 @@ const Register = () => {
     }
   };
 
-  const handleKTP = (e) => {
-    const file = e.target.files[0];
+  const handleKTP = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files;
 
     if (file) {
-      setFileNameKTP(file.name);
+      // setFileNameKTP(file.name);
 
       const reader = new FileReader();
 
@@ -52,15 +52,15 @@ const Register = () => {
         console.error("Error reading file:", error);
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file[0]);
     }
   };
 
-  const handleSelfie = (e) => {
-    const file = e.target.files[0];
+  const handleSelfie = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files;
 
     if (file) {
-      setFileNameSelfie(file.name);
+      // setFileNameSelfie(file.name);
 
       const reader = new FileReader();
 
@@ -73,7 +73,7 @@ const Register = () => {
         console.error("Error reading file:", error);
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file[0]);
     }
   };
 
@@ -92,7 +92,7 @@ const Register = () => {
   //   }
   // };
 
-  const handleRegister = async (e) => {
+  const handleRegister = async () => {
     try {
       const payload = {
         trId: uuidv4(),
@@ -154,7 +154,7 @@ const Register = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleRegister(e);
+              handleRegister();
             }}
           >
             <div className="d-flex flex-column p-3">
