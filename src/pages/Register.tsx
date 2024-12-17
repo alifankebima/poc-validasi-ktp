@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 // import axios from "axios";
 // import swal from "sweetalert2";
@@ -8,10 +8,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
 import formRegister from "../config/schema/formRegister";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const Register = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [nik, setNIK] = useState("");
   const [fullname, setFullname] = useState("");
@@ -96,37 +96,44 @@ const Register = () => {
     try {
       const payload = {
         trId: uuidv4(),
-        name:fullname,
+        name: fullname,
         nik,
         email,
         password,
         dob: moment(dateOfBirth).format("DD-MM-YYYY"),
         ktp: ktpBase64,
         selfie: selfieBase64,
-        phone:phoneNumber
-      }
+        phone: phoneNumber,
+      };
 
-      const {error} = formRegister.validate(payload)
-      if(error){
+      const { error } = formRegister.validate(payload);
+      if (error) {
         Swal.fire({
-        title: `Validation Error`,
-        text: `${error.message}`,
-        icon: `error`,
-      });
-        throw new Error(error.message)
+          title: `Validation Error`,
+          text: `${error.message}`,
+          icon: `error`,
+        });
+        throw new Error(error.message);
       }
 
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/validasi-ktp/lowcode/register`,
         payload
       );
-      if (response.status == 200) {
+      console.log(response)
+      if (response?.data?.error == false) {
         Swal.fire({
           title: `Register success`,
-          text: `ok`,
+          text: `KTP terdaftar pada dukcapil, registrasi akun berhasil!`,
           icon: `success`,
         });
-        // navigate("/login");
+        navigate("/login");
+      } else {
+        Swal.fire({
+          title: `Login failed`,
+          text: `${response?.data?.message || "error"} `,
+          icon: `error`,
+        });
       }
     } catch (error) {
       console.error(error);
@@ -187,9 +194,11 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+
+              <div className="mt-5 align-self-center">Identity Form</div>
               <input
                 type="text"
-                className="border-0 border-bottom border-secondary border-2 mt-5"
+                className="border-0 border-bottom border-secondary border-2 mt-3"
                 id="formFullname"
                 placeholder="Full Name"
                 value={fullname}
@@ -204,23 +213,25 @@ const Register = () => {
                 value={nik}
                 onChange={(e) => handleKTPInput(e)}
               />
-              <input
-                type="text"
-                inputMode="numeric"
-                className="border-0 border-bottom border-secondary border-2 mt-4"
-                id="formPhoneNumber"
-                placeholder="Phone Number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-              <input
-                type="date"
-                className="border-0 border-bottom border-secondary border-2 mt-4"
-                id="formDateOfBirth"
-                placeholder="Date of Birth"
-                value={dateOfBirth}
-                onChange={(e) => setDateOfBirth(e.target.value)}
-              />
+              <div className="d-flex w-100">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  className="border-0 border-bottom border-secondary border-2 mt-4 me-2 w-50"
+                  id="formPhoneNumber"
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+                <input
+                  type="date"
+                  className="border-0 border-bottom border-secondary border-2 mt-4 ms-2 w-50"
+                  id="formDateOfBirth"
+                  placeholder="Date of Birth"
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                />
+              </div>
               <div className="mt-3">
                 <label htmlFor="ktpInput" className="form-label">
                   Upload ID Card
@@ -233,8 +244,8 @@ const Register = () => {
                   onChange={handleKTP}
                 />
               </div>
-              {/* <div className="mt-3">
-                <label htmlFor="ktpInput" className="form-label">
+              <div className="mt-3">
+                <label htmlFor="selfieInput" className="form-label">
                   Upload Selfie
                 </label>
                 <input
@@ -242,9 +253,9 @@ const Register = () => {
                   className="form-control hidden"
                   id="selfieInput"
                   accept=".png, .jpeg, .jpg"
-              
+                  onChange={handleSelfie}
                 />
-              </div> */}
+              </div>
               <button
                 type="submit"
                 className="bg-primary-theme text-center mt-5 py-2 text-white border-0 rounded-pill"
