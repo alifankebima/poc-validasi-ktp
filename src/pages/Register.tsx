@@ -9,6 +9,8 @@ import Swal from "sweetalert2";
 import moment from "moment";
 import formRegister from "../config/schema/formRegister";
 import { v4 as uuidv4 } from "uuid";
+import Tesseract from "tesseract.js";
+import { toast, ToastContainer } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const Register = () => {
     }
   };
 
-  const handleKTP = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleKTP = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
 
     if (file) {
@@ -53,10 +55,32 @@ const Register = () => {
       };
 
       reader.readAsDataURL(file[0]);
+
+      const toastId = toast.loading('Processing OCR...');
+      const ocrResult = await Tesseract.recognize(file[0], "eng+ind");
+      toast.dismiss(toastId)
+
+      console.log(ocrResult)
+      const ocrNIK = ocrResult.data.lines.find(o => o.text.includes("NIK"))?.text?.match(/\d/g)?.join("")
+      const ocrNama = ocrResult.data.lines.find(o => o.text.includes("NAMA"))?.text?.match(/\d/g)?.join("")
+      const ocrDOB = ocrResult.data.lines.find(o => o.text.match(/\b\d{2}-\d{2}-\d{3}\b/))?.text?.match(/\b\d{2}-\d{2}-\d{4}\b/)
+
+      console.log(ocrDOB)
+
+      if(ocrNIK || ocrNama){
+        toast.success(`OCR succeeded!`);
+        
+        if(ocrNIK) setNIK(ocrNIK);
+        if(ocrNama) setFullname(ocrNama)
+      } else {
+        toast.error('OCR Error, Please input details manually');
+      }
+      console.log(ocrNIK)
+      console.log(ocrNama)
     }
   };
 
-  const handleSelfie = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelfie = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
 
     if (file) {
@@ -120,7 +144,7 @@ const Register = () => {
         `${import.meta.env.VITE_BACKEND_URL}/validasi-ktp/lowcode/register`,
         payload
       );
-      console.log(response)
+      console.log(response);
       if (response?.data?.error == false) {
         Swal.fire({
           title: `Register success`,
@@ -272,6 +296,7 @@ const Register = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
